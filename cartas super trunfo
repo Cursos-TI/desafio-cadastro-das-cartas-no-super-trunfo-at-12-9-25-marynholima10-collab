@@ -1,0 +1,81 @@
+super-trunfo-desafio/
+ ├── super_trunfo.py
+ ├── README.md
+ └── .gitignore
+
+
+  #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Desafio de Lógica: Super Trunfo em Python
+Autor: [SEU NOME AQUI]
+"""
+
+import random
+
+class Carta:
+    def __init__(self, nome, atributos):
+        self.nome = nome
+        self.atributos = atributos  # dicionário: {"forca": 80, "velocidade": 70}
+
+    def __str__(self):
+        return f"{self.nome} - " + ", ".join([f"{k}: {v}" for k, v in self.atributos.items()])
+
+class JogoSuperTrunfo:
+    def __init__(self):
+        self.baralho = [
+            Carta("Leão", {"forca": 90, "velocidade": 70, "inteligencia": 60}),
+            Carta("Tigre", {"forca": 85, "velocidade": 75, "inteligencia": 65}),
+            Carta("Elefante", {"forca": 95, "velocidade": 40, "inteligencia": 55}),
+            Carta("Águia", {"forca": 60, "velocidade": 90, "inteligencia": 70}),
+            Carta("Golfinho", {"forca": 50, "velocidade": 80, "inteligencia": 90}),
+        ]
+        random.shuffle(self.baralho)
+        self.jogador = self.baralho[:len(self.baralho)//2]
+        self.computador = self.baralho[len(self.baralho)//2:]
+
+    def jogar(self):
+        print("=== Desafio Super Trunfo ===")
+        rodada = 1
+        while self.jogador and self.computador:
+            print(f"\n--- Rodada {rodada} ---")
+            carta_jogador = self.jogador.pop(0)
+            carta_computador = self.computador.pop(0)
+
+            print("Sua carta:", carta_jogador)
+            atributo = input("Escolha um atributo (forca/velocidade/inteligencia): ").strip().lower()
+
+            if atributo not in carta_jogador.atributos:
+                print("Atributo inválido! Você perdeu a rodada.")
+                self.computador.append(carta_computador)
+                rodada += 1
+                continue
+
+            valor_jogador = carta_jogador.atributos[atributo]
+            valor_computador = carta_computador.atributos[atributo]
+
+            print(f"Computador jogou: {carta_computador}")
+            print(f"Você: {valor_jogador} x Computador: {valor_computador}")
+
+            if valor_jogador > valor_computador:
+                print("Você venceu a rodada!")
+                self.jogador.extend([carta_jogador, carta_computador])
+            elif valor_computador > valor_jogador:
+                print("Computador venceu a rodada!")
+                self.computador.extend([carta_computador, carta_jogador])
+            else:
+                print("Empate! Cada um fica com sua carta.")
+                self.jogador.append(carta_jogador)
+                self.computador.append(carta_computador)
+
+            rodada += 1
+
+        # Final do jogo
+        if self.jogador:
+            print("\nParabéns! Você venceu o jogo 🎉")
+        else:
+            print("\nO computador venceu! Tente novamente.")
+
+if __name__ == "__main__":
+    jogo = JogoSuperTrunfo()
+    jogo.jogar()
